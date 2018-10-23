@@ -20,8 +20,8 @@ public class RenderBoardPanel extends JPanel {
 		setVisible(true);
 	}
 
-	private RenderGameEntity renderEntity = new RenderGameEntity(new Snake(), new Fruit(), this.game);
-	private RenderMenuPanel renderMenu = new RenderMenuPanel(this.game);
+	private RenderGameEntity renderEntity = new RenderGameEntity(new Snake(), new Apple());
+	private RenderMenuPanel renderMenu = new RenderMenuPanel();
 
 	private Font highScoreFont = new Font("Serif", Font.BOLD, 58);
 
@@ -62,7 +62,7 @@ public class RenderBoardPanel extends JPanel {
 	private void renderEntity(Graphics graphics) {
 		if (game.stateOfGame() == game.getGameState()) {
 			renderEntity.renderEntities(graphics);
-			if (Game.gameOver) {
+			if (Game.gameIsOver()) {
 				game.setPause(true);
 			}
 		}

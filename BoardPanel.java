@@ -10,49 +10,60 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+/**
+ * The board class is where we put all the objects that is supposed to be
+ * painted on the screen.
+ * 
+ * @author a16tobfr
+ *
+ * @method paintComponent(Graphics) - used to draw the relevant components
+ * @method renderHighScore(Graphics) - used to render the highscore
+ * @method renderEntity(Graphics) - renders the entities on the board
+ * @method renderMenu(Graphics) - renders the menu
+ * @method borders(Graphics) - renders the borders for the game
+ * @method bannerWindow(Graphics) - renders the window in which the banner is placed
+ * @method banner(Graphics) - renders the banner for the game
+ * @method scoreBoxWindow(Graphics) - renders the score box in which the current score is
+ *         rendered
+ * * * * * getter methods
+ * @method getSnake() - returns the snake so we can paint it on the screen
+ * @method getRenderMenuPanel() - returns the RenderMenuPanel object
+ * @method getRenderEntityPanel() - returns the RenderGameEntity object
+ *  * * * * * setter method
+ * @method setScoreString(int)
+ * 
+ */
 @SuppressWarnings("serial")
 public class BoardPanel extends JPanel {
-	private Game game; 
+	private Game game;
 	private Snake snake = new Snake();
 	private Apple apple = new Apple();
 
+	private Color highscoreTextColor = new Color(219, 215, 4);
+	private Color gameBorderColor = new Color(86, 0, 0);
+	private Color bannerWindowColor = new Color(130, 138, 150);
+	private Color scoreBoxBorderColor = Color.DARK_GRAY;
+	private Color scoreBoxInnerColor = new Color(110, 118, 130);
+	private Color scoreBoxTextColor = new Color(110, 198, 130);
 	private String scoreString;
+	private RenderGameEntity renderEntity = new RenderGameEntity(this.snake, this.apple);
+	private RenderMenuPanel renderMenu = new RenderMenuPanel();
+	private Font highScoreFont = new Font("Serif", Font.BOLD, 58);
+	private BufferedImage image;
 
 	public BoardPanel(Game game) {
 		this.game = game;
-		setSize(805, 835);   
 		setVisible(true);
-	}
-	
-	public Snake getSnake() {
-		return this.snake;
-	}
-
-	private RenderGameEntity renderEntity = new RenderGameEntity(this.snake, this.apple);
-	private RenderMenuPanel renderMenu = new RenderMenuPanel();
-
-	private Font highScoreFont = new Font("Serif", Font.BOLD, 58);
-
-	private BufferedImage image;
-
-	public RenderMenuPanel getRenderMenuPanel() {
-		return renderMenu;
-	}
-
-	public RenderGameEntity getRenderEntityPanel() {
-		return renderEntity;
 	}
 
 	public void paintComponent(Graphics graphics) {
-		frameBorders(graphics);
+		borders(graphics);
 		bannerWindow(graphics);
 		scoreBoxWindow(graphics);
-		logo(graphics);
+		banner(graphics);
 		if (game.isInMenu() == true && game.isInGame() == false) {
-			System.out.println("paintComponent(g) - rendering Menu(g)...");
 			renderMenu(graphics);
 		} else if (game.isInGame() == true && game.isInMenu() == false) {
-			System.out.println("paintComponent(g) - rendering Entity(g)...");
 			renderEntity(graphics);
 		} else if (game.stateOfGame() == game.getHighScoreState()) {
 			renderHighScore(graphics);
@@ -61,18 +72,15 @@ public class BoardPanel extends JPanel {
 
 	private void renderHighScore(Graphics graphics) {
 		int currentHighscore = game.getFileManager().getHighScore();
-		graphics.setColor(new Color(219, 215, 4));
-		graphics.drawString("Highscore - ", 100, 400);
-		graphics.drawString("" + currentHighscore, 400, 400);
+		graphics.setColor(highscoreTextColor);
+		graphics.drawString("Highscore - ", 200, 400);
+		graphics.drawString("" + currentHighscore, 500, 400);
 
 	}
 
 	private void renderEntity(Graphics graphics) {
 		if (game.stateOfGame() == game.getGameState()) {
 			renderEntity.renderEntities(graphics);
-			if (Game.gameIsOver()) {
-				game.setPause(true);
-			}
 		}
 	}
 
@@ -82,8 +90,8 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
-	private void frameBorders(Graphics graphics) {
-		graphics.setColor(new Color(86, 0, 0));
+	private void borders(Graphics graphics) {
+		graphics.setColor(gameBorderColor);
 		// Top border
 		graphics.fillRect(0, 0, 800, 100);
 		// Left border
@@ -95,33 +103,44 @@ public class BoardPanel extends JPanel {
 	}
 
 	private void bannerWindow(Graphics graphics) {
-		graphics.setColor(new Color(130, 138, 150));
+		graphics.setColor(bannerWindowColor);
 		graphics.fillRect(20, 15, 760, 70);
 	}
 
-	public void setScoreString(String string) {
-		scoreString = string;
-	}
-
-	private void scoreBoxWindow(Graphics graphics) {
-		setScoreString("" + game.getScore());
-
-		graphics.setColor(Color.DARK_GRAY);
-		graphics.fillRect(600, 17, 177, 66);
-		graphics.setColor(new Color(110, 118, 130));
-		graphics.fillRect(603, 20, 171, 60);
-		graphics.setColor(new Color(110, 198, 130));
-		graphics.setFont(highScoreFont);
-		graphics.drawString(scoreString.toString(), 612, 70);
-
-	}
-
-	private void logo(Graphics graphics) {
+	private void banner(Graphics graphics) {
 		try {
 			image = ImageIO.read(new File("snakeLogo_570w.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		graphics.drawImage(image, 25, 20, this);
+	}
+
+	private void scoreBoxWindow(Graphics graphics) {
+		setScoreString("" + game.getScore());
+		graphics.setColor(scoreBoxBorderColor);
+		graphics.fillRect(600, 17, 177, 66);
+		graphics.setColor(scoreBoxInnerColor);
+		graphics.fillRect(603, 20, 171, 60);
+		graphics.setColor(scoreBoxTextColor);
+		graphics.setFont(highScoreFont);
+		graphics.drawString(scoreString.toString(), 612, 70);
+
+	}
+
+	public Snake getSnake() {
+		return this.snake;
+	}
+
+	public RenderMenuPanel getRenderMenuPanel() {
+		return renderMenu;
+	}
+
+	public RenderGameEntity getRenderEntityPanel() {
+		return renderEntity;
+	}
+	
+	public void setScoreString(String string) {
+		scoreString = string;
 	}
 }

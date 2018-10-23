@@ -3,6 +3,15 @@ package snake_main_package;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
+/**
+ * This class detects if the user is hovering with the mouse cursor over one of
+ * the buttons in the menu.
+ * 
+ * @author a16tobfr
+ *
+ * @method mouseMoved(MouseEvent) - used to detect if the mouse is moved over the buttons
+ * 
+ */
 public class MouseMotionManager implements MouseMotionListener {
 	private Game game;
 
@@ -10,11 +19,9 @@ public class MouseMotionManager implements MouseMotionListener {
 		this.game = game;
 	}
 
-	@Override
 	public void mouseDragged(MouseEvent e) {
 	}
 
-	@Override
 	public void mouseMoved(MouseEvent e) {
 		if (game.stateOfGame() == game.getMenuState()) {
 			game.getBoardPanel().getRenderMenuPanel().getStartButton().checkHover(e.getX(), e.getY() - 37);

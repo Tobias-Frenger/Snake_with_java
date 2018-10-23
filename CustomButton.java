@@ -1,14 +1,24 @@
- package snake_main_package;
+package snake_main_package;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
+/**
+ * This class is used to create custom buttons for the game
+ * 
+ * @author a16tobfr
+ *
+ * @method checkHover(int,int) - used to set the color of the text when the mouse cursor is hovering the button
+ * @method checkClick(int,int) - used to detect if the button was clicked
+ * @method drawComponent() - used to draw the button
+ * 
+ */
 public class CustomButton {
-	private Rectangle rect;
 	private static final Color MENU_TEXT_COLOR = new Color(96, 51, 51);
 	private static final Color HOVER_TEXT_COLOR = new Color(35, 160, 4);
+	private Rectangle rect;
 	private Color currentColor;
 	private String buttonText;
 
